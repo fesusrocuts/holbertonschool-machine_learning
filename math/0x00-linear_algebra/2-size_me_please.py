@@ -1,24 +1,20 @@
 #!/usr/bin/env python3
-import numpy as np
+""" Write a function def matrix_shape(matrix):
+that calculates the shape of a matrix:
+
+You can assume all elements in the same dimension are
+of the same type/shape
+The shape should be returned as a list of integers
+"""
 
 
 def matrix_shape(x):
-    x = np.asarray(list(x))
-    x = x.astype(int, copy=False)
-    x2 = []
-    for i in x.shape:
-        x2.append(i)
-    x = x2
-    del x2
-    return x
-
-
-def matrix_shape1(x, c=[]):
+    """ fn matrix_shape"""
+    a = len(x)
+    b = len(x[0])
     try:
-        c.append(len(x))
-        if type(x) is list:
-            for x2 in x:
-                matrix_shape(x2)
-    except Exception as e:
-        pass
-    return c
+        d = len(x[0][0])
+        c = [a, b, d]
+    except:
+        c = [a, b]
+    return(c)
