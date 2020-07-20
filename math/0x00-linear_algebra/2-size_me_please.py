@@ -10,11 +10,12 @@ The shape should be returned as a list of integers
 
 def matrix_shape(x):
     """ fn matrix_shape"""
-    a = len(x)
-    b = len(x[0])
     try:
-        d = len(x[0][0])
-        c = [a, b, d]
-    except:
-        c = [a, b]
-    return(c)
+        if not x:
+            return None
+        if type(x[0]) is not list:
+            return [len(x)]
+        return [len(x)] + matrix_shape(x[0])
+    except TypeError:
+        print("Error with the matrix")
+        raise
