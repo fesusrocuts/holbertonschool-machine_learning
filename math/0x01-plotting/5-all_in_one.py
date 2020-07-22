@@ -27,6 +27,7 @@ student_grades = np.random.normal(68, 15, 50)
 
 # your code here
 plt.figure()
+# https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html
 plt.subplots_adjust(hspace=1, wspace=0.5)
 plt.suptitle('All in One')
 
