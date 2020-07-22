@@ -11,6 +11,7 @@ y2 = np.exp((r / t2) * x)
 
 # your code here
 """
+https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html
 These are subplot grid parameters encoded as a single integer.
 "111" means "1x1 grid, first subplot" and
 "234" means "2x3 grid, 4th subplot".
