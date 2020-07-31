@@ -26,7 +26,7 @@ class Poisson:
             self.lambtha = float(lambtha)
 
     def pmf(self, k):
-        """ Calculates the value of the PMF for a given number of “successes”"""
+        """ Calculates the value of the PMF for a given number of OK"""
         k = int(k)
 
         if k < 0:
@@ -42,14 +42,12 @@ class Poisson:
                 (self.lambtha ** k)) / factorial
 
     def cdf(self, k):
-        """ Calculates the value of the CDF for a given number of “successes”"""
+        """ Calculates the value of the CDF for a given number of OK"""
         k = int(k)
         if k < 0:
             return 0
 
         sm = 0
-
-
         for i in range(k + 1):
             factorial = 1
             for x in range(1, i + 1):
