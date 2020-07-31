@@ -11,13 +11,12 @@ class Exponential:
         self.pi = 3.1415926536
         self.e = 2.7182818285
         if data is not None:
-            try:
-                if len(data) <= 2:
-                    raise ValueError("data must contain multiple values")
-            except:
-                if not isinstance(data, list):
-                    raise TypeError("data must be a list")
-                self.lambtha = 1 / float(sum(data) / len(data))
+            if len(data) <= 2:
+                raise ValueError("data must contain multiple values")
+            if not isinstance(data, list):
+                raise TypeError("data must be a list")
+            self.lambtha = 1 / float(sum(data) / len(data))
+
         else:
             if lambtha <= 0:
                 raise ValueError("lambtha must be a positive value")
