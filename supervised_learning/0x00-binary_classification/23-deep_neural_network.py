@@ -4,8 +4,8 @@ neural network performing binary classification
 """
 
 import numpy as np
-import matplotlib as plt
-
+# import matplotlib as plt
+import matplotlib.pyplot as plt
 
 class DeepNeuralNetwork:
     """ class DeepNeuralNetwork"""
@@ -148,8 +148,9 @@ class DeepNeuralNetwork:
         arr_cost.append(cost)
         if verbose is True:
             print("Cost after {} iterations: {}".format(iterations, cost))
+        # xlim([0 inf])
         if graph is True:
-            plt.xlim(0, iterations)
+            plt.xlim([0, iterations])
             plt.xlabel('iteration')
             plt.ylabel('cost')
             plt.title("Training cost")
