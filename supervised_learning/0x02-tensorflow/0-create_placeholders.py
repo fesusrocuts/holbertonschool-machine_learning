@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" 0. Placeholders 
+""" 0. Placeholders
 function def create_placeholders(nx, classes): that returns
 two placeholders, x and y, for the neural network
 nx: the number of feature columns in our data
