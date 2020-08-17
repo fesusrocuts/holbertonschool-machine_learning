@@ -23,24 +23,31 @@ def create_layer(prev, n, activation):
     each layer should be given the name layer
     Returns: the tensor output of the layer
     """
+
     try:
         initializer = \
             (tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG"))
-        kwargs1 = {
-            'units': n,
-            'activation': activation,
-            'name': 'layer', 'kernel_initializer': initializer
-            }
-        return tf.layers.Dense(kwargs1)(prev)
+        return tf.layers.Dense(
+            units=n,
+            activation=activation,
+            name='layer',
+            kernel_initializer=initializer)(prev)
     except Exception as e:
-        kwargs0 = {
-            'unmodeits': "fan_avg",
-            'distribution': "normal"
-            }
-        initializer = tf.keras.initializers.VarianceScaling(kwargs0)
-        kwargs1 = {
-            'units': n,
-            'activation': activation,
-            'name': 'layer', 'kernel_initializer': initializer
-            }
-        return tf.compat.v1.layers.Dense(kwargs1)(prev)
+        initializer = tf.compat.v1.keras.initializers.VarianceScaling(
+            scale=1.0,
+            mode='fan_avg',
+            distribution='truncated_normal',
+            seed=None
+        )
+        return tf.compat.v1.layers.Dense(
+            units=n,
+            activation=activation,
+            use_bias=True,
+            kernel_initializer=initializer,
+            bias_initializer=tf.zeros_initializer(),
+            kernel_regularizer=None,
+            bias_regularizer=None,
+            activity_regularizer=None,
+            kernel_constraint=None, bias_constraint=None,
+            trainable=True,
+            name="layer")(prev)
