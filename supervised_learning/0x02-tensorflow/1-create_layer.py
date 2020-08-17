@@ -26,9 +26,9 @@ def create_layer(prev, n, activation):
     Returns: the tensor output of the layer
     """
     try:
-        initialize = tf.contrib.layers.variance_scaling_initializer(mode="fan_avg", distribution="normal")
+        initializer = tf.contrib.layers.variance_scaling_initializer(mode="fan_avg", distribution="normal")
         layer = (tf.layers.Dense(units=n, activation=activation,
-                kernel_initializer=scalar, name="layer"))
+                kernel_initializer=initializer, name="layer"))
         return layer(prev)
     except Exception as e:
         #tf.compat.v1.disable_v2_behavior()
