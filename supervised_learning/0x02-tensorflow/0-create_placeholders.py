@@ -8,9 +8,8 @@ Returns: placeholders named x and y, respectively
 x is the placeholder for the input data to the neural network
 y is the placeholder for the one-hot labels for the input data
 """
-#import tensorflow as tf
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior() 
+import tensorflow as tf
+
 
 def create_placeholders(nx, classes):
     """ fn create_placeholders,
@@ -20,6 +19,12 @@ def create_placeholders(nx, classes):
     x is the placeholder for the input data to the neural network
     y is the placeholder for the one-hot labels for the input data
     """
-    x = tf.placeholder(tf.float64, [None, nx], name='x')
-    y = tf.placeholder(tf.float64, [None, classes], name='y')
-    return(x, y)
+    try:
+        x = tf.placeholder(tf.float64, [None, nx], name='x')
+        y = tf.placeholder(tf.float64, [None, classes], name='y')
+        return(x, y)
+    except Exception as e:
+        tf.compat.v1.disable_v2_behavior()
+        x = tf.compat.v1.placeholder(tf.float64, [None, nx], name='x')
+        y = tf.compat.v1.placeholder(tf.float64, [None, nx], name='x')
+        return(x, y)
