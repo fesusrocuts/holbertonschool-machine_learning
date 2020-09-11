@@ -51,10 +51,8 @@ def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
     ch_only = np.arange(0, c)
     for row in range(ch):
         for col in range(cw):
-            ci[m_only, row, col] = np.sum(np.multiply
-                                                (new_images[m_only,
-                                                            row*sh:row*sh + kh,
-                                                            col*sw:col*sw + kw,
-                                                            ],
-                                                 kernel), axis=(1, 2, 3))
+            prevmult = np.multiply(
+                    new_images[m_only, row*sh:row*sh + kh, col*sw:col*sw + kw],
+                    kernel)
+            ci[m_only, row, col] = np.sum(prevmult, axis=(1, 2, 3))
     return(ci)
