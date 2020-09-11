@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 """ 0. Valid Convolution
 Function convolve_grayscale
 Write a function that performs a valid convolution on grayscale images:
