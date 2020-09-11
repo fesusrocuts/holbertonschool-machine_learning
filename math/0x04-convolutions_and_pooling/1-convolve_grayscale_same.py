@@ -32,19 +32,28 @@ def convolve_grayscale_same(images, kernel):
     """ 1. Same Convolution"""
     m, h, w = images.shape
     kh, kw = kernel.shape
-    p1 = int((kh-1)/2)
-    ch = h + 2*p1 - kh + 1
-    cw = w + 2*p1 - kw + 1
-    new_images = np.pad(images, ((0, 0), (p1, p1), (p1, p1)), mode='constant',
-                        constant_values=0)
-    m, h, w = new_images.shape
-    ci = np.zeros((m, ch, cw))
-    m_only = np.arange(0, m)
-    for row in range(ch):
-        for col in range(cw):
-            ci[m_only, row, col] = np.sum(np.multiply
-                                                (new_images[m_only,
-                                                            row:row + kh,
-                                                            col:col + kw],
-                                                 kernel), axis=(1, 2))
-    return(ci)
+    if kh % 2 == 0:
+        pad_h = int((kh)/2)
+        output_h = h - kh + (2*pad_h)
+    else:
+        pad_h = int((kh - 1)/2)
+        output_h = h - kh + 1 + (2*pad_h)
+    if kw % 2 == 0:
+        pad_w = int((kw)/2)
+        output_w = w - kw + (2*pad_w)
+    else:
+        pad_w = int((kw - 1)/2)
+        output_w = w - kw + 1 + (2*pad_w)
+
+    pad_images = np.pad(images, pad_width=((0, 0),
+                        (pad_h, pad_h), (pad_w, pad_w)),
+                        mode='constant', constant_values=0)
+    image = np.arange(0, m)
+    cvp_output = np.zeros((m, output_h, output_w))
+    for y in range(output_h):
+        for x in range(output_w):
+            cvp_output[image, y, x] = (np.sum(pad_images
+                                             [image, y:kh + y, x:kw + x] *
+                                             kernel,
+                                             axis=(1, 2)))
+    return cvp_output
