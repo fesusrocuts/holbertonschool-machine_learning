@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
-""" convolve_grayscale_same"""
-
-
-import numpy as np
-
-
-#!/usr/bin/env python3
-""" 1. Same Convolution
+""" convolve_grayscale_same
+1. Same Convolution
 function convolve grayscale same
 Write a function def convolve_grayscale_same(images, kernel): that performs
 a same
@@ -45,15 +39,14 @@ def convolve_grayscale_same(images, kernel):
         pad_w = int((kw - 1)/2)
         output_w = w - kw + 1 + (2*pad_w)
 
-    pad_images = np.pad(images, pad_width=((0, 0),
-                        (pad_h, pad_h), (pad_w, pad_w)),
+    pad_images = np.pad(images,
+                        pad_width=((0, 0), (pad_h, pad_h), (pad_w, pad_w)),
                         mode='constant', constant_values=0)
     image = np.arange(0, m)
     cvp_output = np.zeros((m, output_h, output_w))
     for y in range(output_h):
         for x in range(output_w):
-            cvp_output[image, y, x] = (np.sum(pad_images
-                                             [image, y:kh + y, x:kw + x] *
-                                             kernel,
-                                             axis=(1, 2)))
+            cvp_output[image, y, x] = \
+                    (np.sum(pad_images[image,
+                            y:kh + y, x:kw + x] * kernel, axis=(1, 2)))
     return cvp_output
