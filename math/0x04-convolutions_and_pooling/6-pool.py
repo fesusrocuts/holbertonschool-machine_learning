@@ -41,13 +41,9 @@ def pool(images, kernel_shape, stride, mode='max'):
             c = col*sw
             d = col*sw + kw
             if mode == 'max':
-                ci[m_only, row, col] = np.max(images[m_only,
-                                                           a:b,
-                                                           c:d,
-                                                           ], axis=(1, 2))
+                ci[m_only, row, col] = \
+                        np.max(images[m_only, a:b, c:d, ], axis=(1, 2))
             else:
-                ci[m_only, row, col] = np.average(images[m_only,
-                                                               a:b,
-                                                               c:d,
-                                                               ], axis=(1, 2))
+                ci[m_only, row, col] = \
+                        np.average(images[m_only, a:b, c:d, ], axis=(1, 2))
     return(ci)
