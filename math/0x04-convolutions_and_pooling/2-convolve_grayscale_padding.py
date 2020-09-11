@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 """2. Convolution with Padding
 function convolve grayscale padding
 images is a numpy.ndarray with shape (m, h, w) containing multiple grayscale
@@ -37,9 +36,7 @@ def convolve_grayscale_padding(images, kernel, padding):
     m_only = np.arange(0, m)
     for row in range(ch):
         for col in range(cw):
-            ci[m_only, row, col] = np.sum(np.multiply
-                                                (new_images[m_only,
-                                                            row:row + kh,
-                                                            col:col + kw],
-                                                 kernel), axis=(1, 2))
+            prevmult = np.multiply(
+                    new_images[m_only, row:row + kh, col:col + kw], kernel)
+            ci[m_only, row, col] = np.sum(prevmult, axis=(1, 2))
     return(ci)
