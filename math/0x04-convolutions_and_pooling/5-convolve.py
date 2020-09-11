@@ -57,11 +57,7 @@ def convolve(images, kernels, padding='same', stride=(1, 1)):
                 b = row*sh + kh
                 c = col*sw
                 d = col*sw + kw
-                ci[m_only, row, col, n_k] = np.sum(np.multiply
-                                                         (new_images[m_only,
-                                                                     a:b,
-                                                                     c:d,
-                                                                     ],
-                                                          kernels[n_k]),
-                                                         axis=(1, 2, 3))
+                prevmult = np.multiply(
+                    new_images[m_only, a:b, c:d], kernels[n_k])
+                ci[m_only, row, col, n_k] = np.sum(prevmult, axis=(1, 2, 3))
     return(ci)
