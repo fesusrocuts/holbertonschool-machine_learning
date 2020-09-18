@@ -5,7 +5,7 @@
 import numpy as np
 
 
-def conv_backward2(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
+def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     """
      vn layer
      dZ: np.ndarray, partial derivatives
@@ -88,7 +88,7 @@ def conv_backward2(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     return dA_prev, dW, db
 
 
-def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
+def conv_backward2(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     """
     2. Convolutional Back Prop
     dA_prev -- gradient of the cost with respect to the input
