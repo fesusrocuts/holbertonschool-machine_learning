@@ -27,23 +27,23 @@ def projection_block(A_prev, filters, s=2):
     init = K.initializers.he_normal(seed=None)
 
     output_1 = K.layers.Conv2D(filters=F11, kernel_size=1, strides=s,
-                           padding='same', kernel_initializer=init)(A_prev)
+                               padding='same', kernel_initializer=init)(A_prev)
     batchNorm_1 = K.layers.BatchNormalization()(output_1)
     activation_1 = K.layers.Activation('relu')(batchNorm_1)
 
     output_2 = K.layers.Conv2D(filters=F3, kernel_size=3, padding='same',
-                           kernel_initializer=init)(activation_1)
+                               kernel_initializer=init)(activation_1)
     batchNorm_2 = K.layers.BatchNormalization()(output_2)
     activation_2 = K.layers.Activation('relu')(batchNorm_2)
 
     output_3 = K.layers.Conv2D(filters=F12, kernel_size=1,
-                           padding='same',
-                           kernel_initializer=init)(activation_2)
+                               padding='same',
+                               kernel_initializer=init)(activation_2)
     batchNorm_3 = K.layers.BatchNormalization()(output_3)
 
     outside_short = K.layers.Conv2D(filters=F12, kernel_size=1,
-                              padding='same', strides=s,
-                              kernel_initializer=init)(A_prev)
+                                    padding='same', strides=s,
+                                    kernel_initializer=init)(A_prev)
     batchNorm_short = K.layers.BatchNormalization()(outside_short)
 
     addLayers = K.layers.Add()([batchNorm_3, batchNorm_short])
