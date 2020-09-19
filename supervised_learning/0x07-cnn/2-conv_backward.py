@@ -7,7 +7,7 @@ import numpy as np
 
 def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     """
-     vn layer	
+     vn layer
      dZ: np.ndarray, partial derivatives
         m: num examples
         h_new: output height
@@ -28,61 +28,49 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
      stride: (sh, sw)
      Return: dA_prev, dW, db
      """
-    # retrive dimensions
-    m, h_new, w_new, c_new = dZ.shape
-    m, h_prev, w_prev, c_prev = A_prev.shape
-    kh, kw, c_prev, c_new = W.shape
-    sh = stride[0]
-    sw = stride[1]
+    # Number of samples
+    m = A_prev.shape[0]
 
-    # calculate padding for 'valid' and 'same'
-    if padding == 'valid':
-        ph = 0
-        pw = 0
-    if padding == 'same':
-        ph = np.ceil(((sh * h_prev) - sh + kh - h_prev) / 2)
-        ph = int(ph)
-        pw = np.ceil(((sw * w_prev) - sw + kw - w_prev) / 2)
-        pw = int(pw)
-
-    # initializing output: dA_prev, dW, db
+    # Create placeholders for derivatives
     dA_prev = np.zeros(A_prev.shape)
     dW = np.zeros(W.shape)
     db = np.zeros(b.shape)
 
-    # pad previous images
-    padA_prev = np.pad(A_prev, [(0, 0), (ph, ph), (pw, pw), (0, 0)],
-                       mode='constant', constant_values=0)
-    paddA_prev = np.pad(dA_prev, [(0, 0), (ph, ph), (pw, pw), (0, 0)],
-                        mode='constant', constant_values=0)
+    # Size of stride from forward prop
+    s = stride[0]
 
-    # vectorize
-    imagesVector = np.arange(0, m)
+    # Retrieve height and width of kernel
+    kh, kw = W.shape[0], W.shape[1]
 
-    # Looping engine: loop over m, h_new, w_new, c_new
-    for n in range(m):
-        # select training example i
-        a_padA_prev = padA_prev[n, :, :, :]
-        da_paddA_prev = paddA_prev[n, :, :, :]
+    # Height as h, width as w, and depth of dZ
+    h_new, w_new, c_new = dZ.shape[1], dZ.shape[2], dZ.shape[3]
 
-        for i in range(h_new):
-            for j in range(w_new):
-                for k in range(c_new):
-                    # finding the corners
-                    istart = i * sh
-                    iend = istart + kh
-                    jstart = j * sw
-                    jend = jstart + kw
+    # Retrieve height, width, and depth of previous input layer
+    h_prev, w_prev, c_prev = A_prev.shape[1], A_prev.shape[2], A_prev.shape[3]
 
-                    # slice from previous layer
-                    aSlice = a_padA_prev[istart:iend, jstart:jend, :]
+    # Padding
+    p = (kh + s * (h_prev - 1) - h_prev) // 2
 
-                    # update gradients
-                    da_paddA_prev[
-                        istart:iend, jstart:jend, :] += W[:, :, :, k] * dZ[
-                            n, i, j, k]
+    if padding == "same":
+        p = (h_prev - kh + 2 * p) // s + 1
+        prev1 = ((0, 0), (p, p), (p, p), (0, 0))
+        dA_prev = np.pad(dA_prev, prev1, 'constant', constant_values=0)
+        A_prev_pad = np.pad(A_prev, prev1, 'constant', constant_values=0)
+    else:
+        p = 0
+        A_prev_pad = A_prev
 
-                    dW[:, :, :, k] += aSlice * dZ[n, i, j, k]
-                    db[:, :, :, k] += dZ[n, i, j, k]
-    assert(dA_prev.shape == A_prev.shape)
+    for sample in range(m):
+        for depth in range(c_new):
+            for h in range(h_new):
+                for w in range(w_new):
+                    dA_prev[sample, h*s:h*s+kh, w*s:w*s+kw, :] +=\
+                        W[:, :, :, depth] * dZ[sample, h, w, depth]
+                    dW[:, :, :, depth] +=\
+                        A_prev_pad[sample, h*s:h*s+kh, w*s:w*s+kw, :] * \
+                        dZ[sample, h, w, depth]
+                    db[:, :, :, depth] += dZ[sample, h, w, depth]
+
+    if p:
+        return dA_prev[:, p:-p, p:-p, :], dW, db
     return dA_prev, dW, db
