@@ -22,15 +22,15 @@ def resnet50():
     init = K.initializers.he_normal(seed=None)
     input_Data = K.layers.Input(shape=(224, 224, 3))
     output_1 = K.layers.Conv2D(filters=64,
-                           kernel_size=7,
-                           strides=2,
-                           padding='same',
-                           kernel_initializer=init)(input_Data)
+                               kernel_size=7,
+                               strides=2,
+                               padding='same',
+                               kernel_initializer=init)(input_Data)
     batchNorm_1 = K.layers.BatchNormalization()(output_1)
     activation_1 = K.layers.Activation('relu')(batchNorm_1)
     pooling_1 = K.layers.MaxPooling2D(pool_size=3,
-                                   strides=2,
-                                   padding='same')(activation_1)
+                                      strides=2,
+                                      padding='same')(activation_1)
 
     f1 = [64, 64, 256]
     pb_2 = projection_block(pooling_1, f1, 1)
@@ -57,8 +57,8 @@ def resnet50():
     output_17 = identity_block(output_16, f4)
 
     avg_Pool = K.layers.AveragePooling2D(pool_size=7,
-                                        strides=None,
-                                        padding='same')(output_17)
+                                         strides=None,
+                                         padding='same')(output_17)
     outputs = K.layers.Dense(units=1000,
                              activation='softmax',
                              kernel_initializer=init)(avg_Pool)
