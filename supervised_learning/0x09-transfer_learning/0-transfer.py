@@ -42,9 +42,10 @@ import tensorflow.keras as K
 # Classify ImageNet classes with ResNet50
 # from tensorflow.keras.applications.resnet50 import ResNet50
 # from tensorflow.keras.preprocessing import image
-# from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
-import numpy as np
+# from tensorflow.keras.applications.resnet50 import
+# preprocess_input, decode_predictions
 
+"""
 model = K.applications.resnet50.ResNet50(weights='imagenet')
 
 img_path = 'elephant2.jpg'
@@ -56,38 +57,79 @@ x = K.applications.resnet50.preprocess_input(x)
 preds = model.predict(x)
 # decode the results into a list of tuples (class, description, probability)
 # (one such list for each sample in the batch)
-print('Predicted:', K.applications.resnet50.decode_predictions(preds, top=3)[0])
-# Predicted: [(u'n02504013', u'Indian_elephant', 0.82658225), (u'n01871265', u'tusker', 0.1122357), (u'n02504458', u'African_elephant', 0.061040461)]
-# Predicted: [('n02504013', 'Indian_elephant', 0.94287986), ('n01871265', 'tusker', 0.038615398), ('n02504458', 'African_elephant', 0.018336201)]
+print('Predicted:', K.applications.resnet50.decode_predictions
+    (preds, top=3)[0])
+# Predicted: [(u'n02504013', u'Indian_elephant', 0.82658225),
+# (u'n01871265', u'tusker', 0.1122357),
+# (u'n02504458', u'African_elephant', 0.061040461)]
+# Predicted: [('n02504013', 'Indian_elephant', 0.94287986),
+# ('n01871265', 'tusker', 0.038615398),
+# ('n02504458', 'African_elephant', 0.018336201)]
+"""
 
 
 def load_data():
-    """ load data: cifar10 """
+    """
+    load data: cifar10
+    """
     # import data
     (X_train, Y_train), (X_test, Y_test) = K.datasets.cifar10.load_data()
-    
+
     # Normalize values to range between 0 and 1
     # Change integers to floats
     X_train = X_train.astype('float32')
     X_test = X_test.astype('float32')
-    X_train = X_train / 255
-    X_test = X_test / 255
+    # X_train = X_train / 255
+    # X_test = X_test / 255
 
     # one hot target values
     Y_train = K.utils.to_categorical(Y_train, 10)
     Y_test = K.utils.to_categorical(Y_test, 10)
     return X_train, Y_train, X_test, Y_test
 
+
+def model_definition(Y_train):
+    """
+    model based on resnet50 architecture for CIFAR10
+    """
+    # use resnet50 for bottlensck features
+    model = K.applications.resnet50.ResNet50(include_top=False,
+                                             weights='imagenet',
+                                             input_tensor=K.Input(
+                                                 shape=(32, 32, 3)),
+                                             classes=Y_train.shape[1])
+    # X_p = K.applications.resnet50.preprocess_input(X, data_format=None)
+    for layer in model.layers:
+        # get layers before fully connected layers
+        if (layer.name[0:5] != 'block'):
+            layer.trainiable = False
+
+    modelY = K.Sequential()
+
+    modelY.add(model)
+    modelY.add(K.layers.Flatten())
+    modelY.add(K.layers.Dense(32, activation='relu',
+                              kernel_initializer='he_uniform'))
+    modelY.add(K.layers.Dense(10, activation="softmax"))
+    modelY.summary()
+    # try:
+    #     modelY.save_weights('cifar10.h5')
+    # except Exception as e:
+    #     modelY.save('cifar10.h5')
+    # modelY.save_weights('cifar10.h5')
+    return modelY
+
+
 def compile_model(new_cnn):
     """
-    compile mode 
+    compile model separate, model type ResNet50 classes=Y_train.shape[1]
     """
-
     opt = K.optimizers.SGD(lr=0.001, momentum=0.9)
     new_cnn.compile(optimizer=opt,
                     loss='categorical_crossentropy',
                     metrics=['accuracy'])
     return new_cnn
+
 
 def train_model(new_cnn, X_train, Y_train, X_test, Y_test, batch, epochs):
     """
@@ -105,6 +147,7 @@ def train_model(new_cnn, X_train, Y_train, X_test, Y_test, batch, epochs):
                                  verbose=1,
                                  validation_data=(X_test, Y_test))
 
+
 def preprocess_data(X, Y):
     """
     X: numpy.ndarray, shape(m, 32, 32, 3) containing CIFAR 10 data
@@ -119,8 +162,14 @@ def preprocess_data(X, Y):
                     validation accuracy of 88% or higher
     file script should not run when file is imported
     """
-
+    model = K.applications.resnet50.ResNet50(weights='imagenet',
+                                             input_tensor=K.Input(
+                                                 shape=(32, 32, 3)))
     X_p = K.applications.resnet50.preprocess_input(X, data_format=None)
+    X_p_preds = model.predict(X_p)
+    # print('Predicted:', K.applications.resnet50.decode_predictions(
+    #       X_p_preds, top=3)[0])
+
     Y_p = K.utils.to_categorical(Y, num_classes=10)
     return (X_p, Y_p)
 
@@ -131,71 +180,11 @@ if __name__ == '__main__':
     epochs = 50
 
     X_train, Y_train, X_test, Y_test = load_data()
-    t_model = model_def(Y_train)
+    t_model = model_definition(Y_train)
     t_model = compile_model(t_model)
-    history = train_model(t_model, X_train, Y_train,
-                          X_test, Y_test, batch, epochs)
-    t_model.save('cifar10.h5')
-
-
-"""
-import tensorflow.keras as keras
-
-# Runnable example
-sequential_model = keras.Sequential(
-    [
-        keras.Input(shape=(784,), name="digits"),
-        keras.layers.Dense(64, activation="relu", name="dense_1"),
-        keras.layers.Dense(64, activation="relu", name="dense_2"),
-        keras.layers.Dense(10, name="predictions"),
-    ]
-)
-sequential_model.save_weights("weights.h5")
-sequential_model.load_weights("weights.h5")
-
-# Note that changing layer.trainable may result in a different layer.weights ordering when the model contains nested layers.
-class NestedDenseLayer(keras.layers.Layer):
-    def __init__(self, units, name=None):
-        super(NestedDenseLayer, self).__init__(name=name)
-        self.dense_1 = keras.layers.Dense(units, name="dense_1")
-        self.dense_2 = keras.layers.Dense(units, name="dense_2")
-
-    def call(self, inputs):
-        return self.dense_2(self.dense_1(inputs))
-
-
-nested_model = keras.Sequential([keras.Input((784,)), NestedDenseLayer(10, "nested")])
-variable_names = [v.name for v in nested_model.weights]
-print("variables: {}".format(variable_names))
-
-print("\nChanging trainable status of one of the nested layers...")
-nested_model.get_layer("nested").dense_1.trainable = False
-
-variable_names_2 = [v.name for v in nested_model.weights]
-print("\nvariables: {}".format(variable_names_2))
-print("variable ordering changed:", variable_names != variable_names_2)
-
-
-# Transfer learning example
-# When loading pretrained weights from HDF5, it is recommended to load the weights into the original checkpointed model, and then extract the desired weights/layers into a new model.
-def create_functional_model():
-    inputs = keras.Input(shape=(784,), name="digits")
-    x = keras.layers.Dense(64, activation="relu", name="dense_1")(inputs)
-    x = keras.layers.Dense(64, activation="relu", name="dense_2")(x)
-    outputs = keras.layers.Dense(10, name="predictions")(x)
-    return keras.Model(inputs=inputs, outputs=outputs, name="3_layer_mlp")
-
-
-functional_model = create_functional_model()
-functional_model.save_weights("pretrained_weights.h5")
-
-# In a separate program:
-pretrained_model = create_functional_model()
-pretrained_model.load_weights("pretrained_weights.h5")
-
-# Create a new model by extracting layers from the original model:
-extracted_layers = pretrained_model.layers[:-1]
-extracted_layers.append(keras.layers.Dense(5, name="dense_3"))
-model = keras.Sequential(extracted_layers)
-model.summary()
-"""
+    # history = train_model(t_model, X_train, Y_train,
+    #                        X_test, Y_test, batch, epochs)
+    try:
+        t_model.save_weights('cifar10.h5')
+    except Exception as e:
+        t_model.save('cifar10.h5')
