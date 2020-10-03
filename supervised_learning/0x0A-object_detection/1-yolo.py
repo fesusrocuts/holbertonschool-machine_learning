@@ -15,41 +15,6 @@ class Yolo():
         for item in listC:
             arr.append(item.strip(" "))
         return arr
-    
-    def createBoxes(self, grid_height, grid_width, net_box):
-        """
-        boxes: a list of numpy.ndarrays of
-                shape (grid_height, grid_width, anchor_boxes, 4) containing
-                the processed boundary boxes for each output, respectively:
-                4 => (x1, y1, x2, y2)
-                (x1, y1, x2, y2) should represent the boundary box relative
-                to original image
-        """
-        for r in range(grid_height):
-                for c in range(grid_width):
-                    for b in range(net_box):
-                        y, x, w, h, = net_bx[r, c, b, :4]
-                        # center image using height and width
-                        x = (c + x)
-                        ctr_x = x / grid_width
-                        y = (r + y)
-                        ctr_y = y / grid_height
-                        # image height and width
-                        w = (anchors[b][0] * np.exp(w))
-                        im_width = w / input_w
-                        h = (anchors[b][1] * np.exp(h))
-                        im_height = h / input_h
-
-                        # define scale
-                        x_Box = (ctr_x - im_width/2) * image_width
-                        y_Box = (ctr_y - im_height/2) * image_height
-                        x_2Box = (ctr_x + im_width/2) * image_width
-                        y_2Box = (ctr_y + im_width/2) * image_height
-
-                        # can use BoundBox from plantar library
-                        # ex. box = plantar.BoundBox(...)
-                        net_bx[r, c, b, 0:4] = y_Box, x_Box, y_2Box, x_2Box
-                        boxes.append(net_bx)  # boxes contain scale
 
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
         """
@@ -135,17 +100,18 @@ class Yolo():
         except Exception as e:
             input_height = self.model.input.shape[1]
             input_width = self.model.input.shape[2]
-        
 
         for item in range(len(outputs)):
             net_out_pro = outputs[item]
             grid_height, grid_width = net_out_pro.shape[:2]
             net_box = net_out_pro.shape[-2]
             net_class = net_out_pro.shape[-1] - 5
-            anchors = self.anchors[item] # load from constructor
+            # load from constructor
+            anchors = self.anchors[item]
             net_out_pro[..., :2] = self.sigmoid(net_out_pro[..., :2])
             net_out_pro[..., 4:] = self.sigmoid(net_out_pro[..., 4:])
-            soft_box = net_out_pro[..., :4] # varible soft to be used
+            # varible soft to be used
+            soft_box = net_out_pro[..., :4]
 
             for r in range(grid_height):
                 for c in range(grid_width):
