@@ -42,7 +42,7 @@ def load_images(images_path, as_array=True):
     # sort
     imageIndex = np.argsort(image_names)
 
-    # read and color images, pics or photos 
+    # read and color images, pics or photos
     image_original = []
     for photos in image_paths:
         image_original.append(cv2.imread(photos))
@@ -127,13 +127,16 @@ def generate_triplets(images, filenames, triplet_names):
     """
     image_names = [filenames[m].split('.')[0] for m in range(len(filenames))]
 
-    anchor_names = [names[0] for names in triplet_names]
-    positive_names = [names[1]for names in triplet_names]
-    negative_names = [names[2]for names in triplet_names]
+    # anchor_names
+    an = [names[0] for names in triplet_names]
+    # positive_names
+    pn = [names[1]for names in triplet_names]
+    # negative_names
+    nn = [names[2]for names in triplet_names]
 
-    a_img = [m for m in range(len(image_names)) if image_names[m] in anchor_names]
-    p_img = [m for m in range(len(image_names)) if image_names[m] in positive_names]
-    n_img = [m for m in range(len(image_names)) if image_names[m] in negative_names]
+    a_img = [m for m in range(len(image_names)) if image_names[m] in an]
+    p_img = [m for m in range(len(image_names)) if image_names[m] in pn]
+    n_img = [m for m in range(len(image_names)) if image_names[m] in nn]
 
     A = images[a_img]
     P = images[p_img]
