@@ -9,7 +9,6 @@ class FaceVerification:
     """
     FaceVerification Class
     """
-    
     def __init__(self, model, database, identities):
         """
         class constructor
@@ -46,8 +45,8 @@ class FaceVerification:
         embeddings where e is the dimensionality of the embeddings
         """
         embeddings = self.model.predict(images)
-        return embeddings
 
+        return embeddings
 
     def verify(self, image, tau=0.5):
         """
@@ -71,6 +70,3 @@ class FaceVerification:
             return(i, distance)
         else:
             return (None, None)
-
-
-
