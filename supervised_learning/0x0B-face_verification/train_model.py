@@ -12,19 +12,22 @@ class TrainModel():
     """
     that trains a model for face verification using triplet loss:
     """
-    
     def __init__(self, model_path, alpha):
         """
         Create the class constructor def __init__(self, model_path, alpha):
         model_path is the path to the base face verification embedding model
-            loads the model using with tf.keras.utils.CustomObjectScope({'tf': tf}):
+            loads the model using with
+            tf.keras.utils.CustomObjectScope({'tf': tf}):
             saves this model as the public instance method base_model
         alpha is the alpha to use for the triplet loss calculation
         Creates a new model:
             inputs: [A, P, N]
-                A is a numpy.ndarray of shape (m, n, n, 3)containing the aligned anchor images
-                P is a numpy.ndarray of shape (m, n, n, 3) containing the aligned positive images
-                N is a numpy.ndarray of shape (m, n, n, 3)containing the aligned negative images
+                A is a numpy.ndarray of shape (m, n, n, 3)
+                    containing the aligned anchor images
+                P is a numpy.ndarray of shape (m, n, n, 3)
+                    containing the aligned positive images
+                N is a numpy.ndarray of shape (m, n, n, 3)
+                    containing the aligned negative images
                 m is the number of images
                 n is the size of the aligned images
             outputs: the triplet losses of base_model
@@ -92,10 +95,11 @@ class TrainModel():
         """
         self.base_model.save(save_path)
 
-    @staticmethod   
+    @staticmethod
     def f1_score(y_true, y_pred):
         """
-        static method def f1_score(y_true, y_pred): that calculates the F1 score of predictions
+        static method def f1_score(y_true, y_pred):
+        that calculates the F1 score of predictions
         y_true - a numpy.ndarray of shape (m,) containing the correct labels
             m is the number of examples
         y_pred- a numpy.ndarray of shape (m,) containing the predicted labels
