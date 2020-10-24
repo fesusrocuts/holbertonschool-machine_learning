@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""
+fn determinant
+"""
+
+
+def determinant(matrix):
+    """
+    fn determinant
+    """
+    det_returns = 0
+
+    # check if is list and
+    # check if is square matrix
+    if not isinstance(matrix, list) or len(matrix) < 1:
+        raise TypeError("matrix must be a list of lists")
+    if ((len(matrix) == 1 and isinstance(matrix[0], list))
+            and len(matrix[0]) == 0):
+        return 1
+    for m in matrix:
+        if not isinstance(m, list):
+            raise TypeError("matrix must be a list of lists")
+        if len(m) != len(matrix[0]) or len(m) != len(matrix):
+            raise ValueError("matrix must be a square matrix")
+    if len(matrix) == 1:
+        return matrix[0][0]
+
+    # working with 2X2 submatrices, then end
+    if len(matrix) == 2 and len(matrix[0]) == 2:
+        matrix_2X2 = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]
+        return matrix_2X2
+
+    # define submatric for each column
+    for fCol in list(range(len(matrix))):
+        matCp = matrix_cp(matrix)
+        # remove first row
+        matCp = matCp[1:]
+        mheight = len(matCp)
+
+        # remaining submatrix
+        for idx in range(mheight):
+            matCp[idx] = matCp[idx][0:fCol] + matCp[idx][fCol+1:]
+
+        # signs for
+        # submatrix multiplier
+        sign = (-1) ** (fCol % 2)
+        # pass recursively
+        subMatrix_Det = determinant(matCp)
+        det_returns += sign * matrix[0][fCol] * subMatrix_Det
+    return det_returns
+
+
+def onFillMatrixWithZero(rows, cols):
+    """
+    matrix filled with zeros RowsxCols
+    """
+    matrixZ = []
+    while len(matrixZ) < rows:
+        matrixZ.append([])
+        while len(matrixZ[-1]) < cols:
+            matrixZ[-1].append(0.0)
+    return matrixZ
+
+
+def matrix_cp(matrixA):
+    """
+    copy matrix
+    """
+    # dimensions
+    cols = len(matrixA[0])
+    rows = len(matrixA)
+    
+    # fill
+    matrixCp = onFillMatrixWithZero(rows, cols)
+
+    # copy values
+    for i in range(rows):
+        for j in range(cols):
+            matrixCp[i][j] = matrixA[i][j]
+    return matrixCp
