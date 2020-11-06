@@ -6,6 +6,7 @@ if __name__ == '__main__':
 
     P = np.linspace(0, 1, 11) # [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     print(likelihood(26, 130, P))
+
 """
 alexa@ubuntu-xenial:0x07-bayesian_prob$ ./0-main.py 
 [0.00000000e+00 2.71330957e-04 8.71800070e-02 3.07345706e-03
