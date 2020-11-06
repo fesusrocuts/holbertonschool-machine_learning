@@ -44,8 +44,8 @@ def likelihood(x, n, P):
                          "to 0")
     if x > n:
         raise ValueError("x cannot be greater than n")
-    if not isinstance(P, np.ndarray) or 
-    len(P.shape) != 1 or P.shape[0] < 1:
+    if not isinstance(P, np.ndarray) or \
+            len(P.shape) != 1 or P.shape[0] < 1:
         raise TypeError("P must be a 1D numpy.ndarray")
     for probabilities in P:
         if probabilities > 1 or probabilities < 0:
