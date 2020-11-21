@@ -4,12 +4,18 @@
 
 Based on 0-gp.py, update the class GaussianProcess:
 
-    Public instance method def predict(self, X_s): that predicts the mean and standard deviation of points in a Gaussian process:
-        X_s is a numpy.ndarray of shape (s, 1) containing all of the points whose mean and standard deviation should be calculated
+    Public instance method def predict(self, X_s):
+    that predicts the mean and standard deviation of points
+    in a Gaussian process:
+        X_s is a numpy.ndarray of shape (s, 1) containing all
+        of the points whose mean and standard deviation
+        should be calculated
             s is the number of sample points
         Returns: mu, sigma
-            mu is a numpy.ndarray of shape (s,) containing the mean for each point in X_s, respectively
-            sigma is a numpy.ndarray of shape (s,) containing the variance for each point in X_s, respectively
+            mu is a numpy.ndarray of shape (s,) containing
+            the mean for each point in X_s, respectively
+            sigma is a numpy.ndarray of shape (s,) containing
+            the variance for each point in X_s, respectively
 """
 import numpy as np
 
