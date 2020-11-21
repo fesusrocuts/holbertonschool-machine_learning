@@ -34,12 +34,12 @@ import numpy as np
 class GaussianProcess:
     """class GaussianProcess"""
 
-    def __init__(self, X_init, Y_init, _l=1, sigma_f=1):
+    def __init__(self, X_init, Y_init, l=1, sigma_f=1):
         """constructor"""
 
         self.X = X_init
         self.Y = Y_init
-        self._l = _l
+        self.l = l
         self.sigma_f = sigma_f
         self.K = self.kernel(self.X, self.X)
 
