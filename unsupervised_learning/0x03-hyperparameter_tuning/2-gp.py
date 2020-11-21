@@ -4,11 +4,13 @@
 
 Based on 1-gp.py, update the class GaussianProcess:
 
-    Public instance method def update(self, X_new, Y_new): that updates a Gaussian Process:
-        X_new is a numpy.ndarray of shape (1,) that represents the new sample point
-        Y_new is a numpy.ndarray of shape (1,) that represents the new sample function value
+    Public instance method def update(self, X_new, Y_new):
+    that updates a Gaussian Process:
+        X_new is a numpy.ndarray of shape (1,)
+        that represents the new sample point
+        Y_new is a numpy.ndarray of shape (1,)
+        that represents the new sample function value
         Updates the public instance attributes X, Y, and K
-
 """
 import numpy as np
 
