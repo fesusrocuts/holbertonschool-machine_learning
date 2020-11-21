@@ -4,13 +4,15 @@
 
 Based on 3-bayes_opt.py, update the class BayesianOptimization:
 
-    Public instance method def acquisition(self): that calculates the next best sample location:
+    Public instance method def acquisition(self):
+    that calculates the next best sample location:
         Uses the Expected Improvement acquisition function
         Returns: X_next, EI
-            X_next is a numpy.ndarray of shape (1,) representing the next best sample point
-            EI is a numpy.ndarray of shape (ac_samples,) containing the expected improvement of each potential sample
+            X_next is a numpy.ndarray of shape (1,)
+            representing the next best sample point
+            EI is a numpy.ndarray of shape (ac_samples,)
+            containing the expected improvement of each potential sample
     You may use from scipy.stats import norm
-
 """
 import numpy as np
 from scipy.stats import norm
