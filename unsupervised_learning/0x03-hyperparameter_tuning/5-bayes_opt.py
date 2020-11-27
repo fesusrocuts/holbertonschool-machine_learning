@@ -37,8 +37,33 @@ class BayesianOptimization:
         self.minimize = minimize
 
     def acquisition(self):
-        """fn  calculates the next best sample location"""
-        return None, None
+        """
+        fn calculates the next best sample location
+        determined by the maximum value of the acquisition function
+        """
+
+        mu, sigma = self.gp.predict(self.X_s)
+        # is a numpy.ndarray of shape (1,)
+        Sigma = np.zeros(sigma.shape)
+        if self.minimize is True:
+            Sigma_num = np.min(self.gp.Y) - mu - self.xsi
+        else:
+            Sigma_num = mu - np.max(self.gp.Y) - self.xsi
+
+        for i in range(sigma.shape[0]):
+            if sigma[i] > 0:
+                Sigma[i] = Sigma_num[i] / sigma[i]
+            else:
+                Sigma[i] = 0
+
+        # containing the expected improvement of each potential sample
+        Expected = np.zeros(sigma.shape)
+        for i in range(sigma.shape[0]):
+            if sigma[i] > 0:
+                Expected[i] = Sigma_num[i] * norm.cdf([i]) + sigma[i] * norm.pdf(Sigma[i])
+            else:
+                Expected[i] = 0
+        return self.X_s[np.argmax(Expected)], Expected
 
     def optimize(self, iterations=100):
         """fn optimizes the black-box function"""
