@@ -31,15 +31,23 @@ class GaussianProcess:
         self.l = l
         self.sigma_f = sigma_f
         self.K = self.kernel(self.X, self.X)
-
+    
     def kernel(self, X1, X2):
         """
         fn calculates the covariance kernel matrix between two matrices
         """
-        return None
+        sqdist = np.sum(X1**2,1).reshape(-1,1) + \
+                np.sum(X2**2,1) - 2*np.dot(X1, X2.T)
+        return (self.sigma_f ** 2) * np.exp(-.5 * (1/(self.l ** 2.0)) * sqdist)
 
     def predict(self, X_s):
         """
         fn Process Prediction
         """
-        return None, None
+        K_p = self.kernel(self.X, X_s)
+        K_pp = self.kernel(X_s, X_s)
+        K_xx_inv = np.linalg.inv(self.K)
+        mu = np.matmul(np.matmul(K_p.T, K_xx_inv), self.Y).reshape(-1)
+        sigma_noise = K_pp - np.matmul(np.matmul(K_p.T, K_xx_inv), K_p)
+        sigma = np.diag(sigma_noise)
+        return mu, sigma
