@@ -35,13 +35,9 @@ class BayesianOptimization:
         self.xsi = xsi
         self.minimize = minimize
 
-    def acquisition2(self):
-        """fn  calculates the next best sample location"""
-        return None, None
-
     def acquisition(self):
         """
-        fn  calculates the next best sample location
+        fn calculates the next best sample location
         determined by the maximum value of the acquisition function
         """
 
@@ -63,7 +59,7 @@ class BayesianOptimization:
         Expected = np.zeros(sigma.shape)
         for i in range(sigma.shape[0]):
             if sigma[i] > 0:
-                Expected[i] = Sigma_num[i] * norm.cdf(Sigma_num[i]) + sigma[i] * norm.pdf(Sigma[i])
+                Expected[i] = Sigma_num[i] * norm.cdf([i]) + sigma[i] * norm.pdf(Sigma[i])
             else:
                 Expected[i] = 0
         return self.X_s[np.argmax(Expected)], Expected
